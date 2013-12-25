@@ -1,4 +1,4 @@
-vmstaxtool
+Vmstax
 ==========
 
 Tool to generate graphs from vmstat/dstat logs.
