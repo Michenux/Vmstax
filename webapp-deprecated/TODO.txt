@@ -1,0 +1,5 @@
+dstat: 
+	- TODO: message informatif pour les colonnes non gérées
+	- Hostname/user/date etc...
+	
+dstat --output /zerezo/partage/divx/dstat-test.csv -d -D total,sda1 -m -p -g -s -n -N eth0,lo -c -C 0

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--- The default skin class for a Spark SkinnableContainer container.  
+
+     @see spark.components.SkinnableContainer
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabled="0.5">
+
+    <fx:Metadata>
+    <![CDATA[ 
+        [HostComponent("spark.components.NavigatorContent")]
+    ]]>
+    </fx:Metadata> 
+       
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="disabled" />
+    </s:states>
+    
+    <s:Rect id="background" left="0" right="0" top="0" bottom="0">
+        <s:fill>
+            <s:SolidColor id="bgFill" color="#aeb0b2"/>
+        </s:fill>
+    </s:Rect>
+    
+    <s:Group id="contentGroup" left="0" right="0" top="0" bottom="0" minWidth="0" minHeight="0">
+        <s:layout>
+            <s:VerticalLayout horizontalAlign="center" paddingBottom="0" paddingLeft="0" paddingRight="0" paddingTop="0"/>
+        </s:layout>
+    </s:Group>
+
+</s:Skin>

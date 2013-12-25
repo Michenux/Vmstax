@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					  xmlns:s="library://ns.adobe.com/flex/spark" 
+					  xmlns:mx="library://ns.adobe.com/flex/mx"
+					  width="1024" skinClass="org.michenux.vmstax.skins.ContentSkin"
+					  creationComplete="creationCompleteHandler(event)">
+	<fx:Declarations>
+		<s:TileGroup
+			id="chartContainer"
+			width="100%" columnAlign="justifyUsingGap" requestedColumnCount="2"
+			columnWidth="508" rowHeight="350">
+		</s:TileGroup>
+		
+		<s:Label
+			id="chartLabel"
+			width="100%" textAlign="center" text="{this.label}" styleName="fileName"/>
+				
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import deng.fzip.FZip;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.MenuEvent;
+			import mx.graphics.ImageSnapshot;
+			import mx.graphics.codec.PNGEncoder;
+			
+			import org.michenux.vmstax.models.ChartBuilder;
+			import org.michenux.vmstax.models.ChartMetaData;
+			import org.michenux.vmstax.models.Resources;
+			import org.michenux.vmstax.models.VmstaxData;
+			import org.swizframework.utils.logging.SwizLogger;
+			
+			import spark.components.Panel;
+								
+			[Bindable]
+			private var vmstaxData:VmstaxData ;
+			
+			public var periodicityIndex:Number = 4;
+			public var periodicityValue:Number = 5;
+			
+			public var filenameOption: String = "top";
+			public var filenameOptionIndex: Number = 0;
+			
+			private var originalTitles: ArrayCollection = new ArrayCollection(); 
+			
+			public var newSaveAsImageMenuData:Array = [
+				{label: "All charts as single image", data: "allasimage"},
+				{label: "All charts as individual images (zip)", data: "allaszip"}
+			];
+			
+			public function addChart( chartPanel: Panel ): void {
+				
+			}
+
+			
+			public function changePeriodicity(event:MenuEvent):void {
+				
+				this.periodicityValue = Number(event.item.data);
+				this.periodicityIndex = event.index ;
+				var periodicity:Number = this.periodicityValue;
+				var i :Number = 0 ;
+				if ( vmstaxData != null ) {
+					for each(var lineMetric:Object in vmstaxData.metrics ) {
+						lineMetric.numLine = i ;
+							i = lineMetric.lineNumber * periodicity ;
+					}
+					vmstaxData.timeAxisMaximum = i ;
+					vmstaxData.metrics.refresh();
+				}
+			}
+			
+			public function drawCharts( vmstaxData: VmstaxData):void {
+				
+				this.vmstaxData = vmstaxData ;
+				
+				// Modifie la periodicity (comboPeriodicity.selectedItem.data)
+				var i :Number = 0 ;
+				
+				for each(var lineMetric:Object in this.vmstaxData.metrics ) {
+					lineMetric.numLine = i ;
+					i = lineMetric.lineNumber * this.periodicityValue ;
+				}
+				
+				if ( i > 0 ) {
+					this.vmstaxData.timeAxisMaximum = i ;
+				}
+				
+				
+				this.label = this.vmstaxData.fileName ;				
+				
+				var oChartBuilder: ChartBuilder = new ChartBuilder();
+				for each( var oChartMetaData: ChartMetaData in this.vmstaxData.chartMetadatas ) {
+					var chartPanel: Panel = oChartBuilder.buildChart(oChartMetaData, this.vmstaxData );
+					this.chartContainer.addElement(chartPanel);
+					this.originalTitles.addItem(chartPanel.title);
+					// Ajoute l'entrée dans le menu d'export as image
+					newSaveAsImageMenuData.push( 
+						{label: oChartMetaData.panelTitle + " Chart", data: oChartMetaData.id } );
+				} 
+				
+				redrawFilename();			
+			}
+			
+			/**
+			 * Sauvegarde du graphique en tant qu'image
+			 */
+			public function saveChartAsImage( kind: String ):void {
+				
+				var file:FileReference = new FileReference();
+				var oChartMetaData:ChartMetaData ;
+							
+				var iPos:Number = this.chartLabel.text.lastIndexOf('.');
+				var baseFileName:String ;
+				if ( iPos != -1 ) {
+					baseFileName = this.chartLabel.text.substring(0,iPos);
+				}
+				else {
+					baseFileName = this.chartLabel.text ;
+				}
+				
+				if ( kind != "allaszip") {
+					
+					var container: IBitmapDrawable ;
+					if ( kind == "allasimage" ) {
+						container = this ;
+						kind = "allcharts";
+					}
+					else {
+						for each(oChartMetaData in vmstaxData.chartMetadatas ) {
+							if ( kind == oChartMetaData.id ) {
+								container = oChartMetaData.panel ;
+								kind = oChartMetaData.id ;
+								break ;
+							}
+						}
+					}
+					if ( container != null && kind != null ) {
+						var image: ImageSnapshot = ImageSnapshot.captureImage(container, 80, new PNGEncoder());
+						file.save(image.data, baseFileName + "-" + kind + ".png");
+						
+					}
+				}
+				else {
+					var allCharts:ImageSnapshot = ImageSnapshot.captureImage(
+						this, 80, new PNGEncoder());
+					var zip:FZip = new FZip();
+					zip.addFile( baseFileName + "-00-allcharts.png",allCharts.data);
+					var i: Number = 1;
+					if ( vmstaxData != null && vmstaxData.chartMetadatas != null ) {
+						for each(oChartMetaData in vmstaxData.chartMetadatas ) {
+							var snapShot:ImageSnapshot = ImageSnapshot.captureImage(oChartMetaData.panel, 80, new PNGEncoder());
+							zip.addFile( baseFileName + "-" +(i < 10?"0" + i: i ) + "-"  + oChartMetaData.id + ".png", snapShot.data);
+							i++ ;
+						}
+					}
+					var stream:ByteArray = new ByteArray();
+					zip.serialize(stream);
+					file.save(stream, baseFileName + ".zip");
+					zip.close();	
+				}
+			}
+			
+			
+			public function redrawFilename(): void {
+				
+				try {
+						
+					if (( this.filenameOption == "top" || this.filenameOption == "both") &&
+						!this.contains(this.chartLabel)) {
+						//chartLabel.height = 30 ;
+						this.addElementAt(this.chartLabel, 0);
+					}
+					
+					if (( this.filenameOption == "chartpanel" || this.filenameOption == "hide")
+						&& this.contains(this.chartLabel)) {
+						this.removeElementAt(0);
+						//chartLabel.height = 0 ;
+					}
+					
+					var cpt: Number = 0 ;
+					while( cpt < this.chartContainer.numElements ) {
+						var panel: Panel = chartContainer.getElementAt(cpt) as Panel;
+						if ( this.filenameOption == "top" || this.filenameOption == "hide" ) {
+							panel.title = originalTitles.getItemAt(cpt) as String;
+						}
+						else {
+							panel.title = originalTitles.getItemAt(cpt) + " - " + this.label ;
+						}
+						cpt++ ;
+					}
+				}catch( e: Error) {
+					Alert.show(e.message);
+				}
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				this.addElement(this.chartLabel);
+				this.addElement(this.chartContainer);
+			}
+
+		]]>
+	</fx:Script>
+
+	
+</s:NavigatorContent>

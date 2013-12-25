@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   xmlns:swiz="http://swiz.swizframework.org"
+			   xmlns:config="org.michenux.vmstax.config.*"
+			   xmlns:log="com.schurchcomputers.flex.swiz.*" 
+			   xmlns:swizlogging="org.swizframework.utils.logging.*" 
+			   xmlns:views="org.michenux.vmstax.views.*"
+			   width="100%" height="100%"> 
+
+	<fx:Style source="assets/styles/styles.css"/>
+
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+		
+			import org.swizframework.utils.logging.SwizLogEventLevel;
+			import org.swizframework.utils.logging.SwizLogger;
+		
+			private static var logger:SwizLogger ;
+					
+			[EventHandler (event="mx.events.FlexEvent.APPLICATION_COMPLETE")]
+			public function init() : void {
+				logger = SwizLogger.getLogger(this);
+				logger.info("VMSTAX - Vmstax.init");
+			}
+						
+			private function genericFault(fe : FaultEvent) : void 
+			{ 
+				Alert.show(fe.message.body.toString()); 
+			} 
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>	
+	
+		<swiz:Swiz id="mySwiz" >
+			<swiz:config>
+				<swiz:SwizConfig id="mySwizConfig" 
+								 strict="true"
+								 eventPackages="org.michenux.vmstax.events"
+								 viewPackages="org.michenux.vmstax.views.*"/>
+				<!-- defaultFaultHandler="genericFault" -->
+			</swiz:config>
+			<swiz:beanProviders >
+				<config:Beans/>
+			</swiz:beanProviders>
+			<swiz:loggingTargets> 
+				<fx:Array> 
+					<log:FirebugTraceTarget 
+						level = "{SwizLogEventLevel.ALL}" 
+						includeDate = "true"
+						includeCategory="false"/> 
+				</fx:Array> 
+			</swiz:loggingTargets>
+		</swiz:Swiz>
+			
+	</fx:Declarations>
+	
+	<s:layout> 
+		<s:VerticalLayout horizontalAlign="center"/> 
+	</s:layout>
+	
+	<s:Scroller width="100%" height="100%">	
+		<views:MainView/>
+	</s:Scroller>
+	
+</s:Application>

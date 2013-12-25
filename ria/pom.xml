@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.michenux.vmstax</groupId>
+		<artifactId>vmstax</artifactId>
+		<version>1.6.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>vmstax-ria</artifactId>
+	<packaging>swf</packaging>
+	<name>Vmstax Flex</name>
+
+	<dependencies>
+		<!-- order is important -->
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>textLayout</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>swc</type>
+			<scope>caching</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>framework</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>swc</type>
+			<scope>caching</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>spark</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>swc</type>
+			<scope>caching</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>sparkskins</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>swc</type>
+			<scope>caching</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>rpc</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>swc</type>
+			<scope>caching</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.adobe.flex.framework</groupId>
+			<artifactId>flex-framework</artifactId>
+			<version>${flex.sdk.version}</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.swizframework</groupId>
+			<artifactId>swizframework</artifactId>
+			<version>1.4.0</version>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google</groupId>
+			<artifactId>gaforflash</artifactId>
+			<version>1.0.1.319</version>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>fzip</groupId>
+			<artifactId>fzip</artifactId>
+			<version>1.5</version>
+			<type>swc</type>
+		</dependency>
+		<dependency>
+			<groupId>com.riaone</groupId>
+			<artifactId>deval</artifactId>
+			<version>1.1</version>
+			<type>swc</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>Vmstax</finalName>
+		<sourceDirectory>src</sourceDirectory>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.flexmojos</groupId>
+				<artifactId>flexmojos-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<sourceFile>org/michenux/vmstax/Vmstax.mxml</sourceFile>
+					<configurationReport>true</configurationReport>
+					<debug>true</debug>
+					<rslUrls>
+						<url>rsl/{artifactId}-{version}.{extension}</url>
+					</rslUrls>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.adobe.flex</groupId>
+						<artifactId>compiler</artifactId>
+						<version>${flex.sdk.version}</version>
+						<type>pom</type>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+	<properties>
+		<flex.sdk.version>4.1.0.16076</flex.sdk.version>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+	</properties>
+</project>

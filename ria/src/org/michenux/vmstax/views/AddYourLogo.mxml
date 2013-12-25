@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="310" close="closeHandler(event)"
+		 title="How to add your logo ?">
+	<fx:Declarations>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.michenux.vmstax.models.Resources;
+			import org.michenux.vmstax.pm.LogoPM;
+			
+			[Inject]
+			[Bindable]
+			public var logoPM:LogoPM;	
+			
+			private function closeHandler(event:CloseEvent):void{
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function titlewindow1_initializeHandler(event:FlexEvent):void
+			{
+				PopUpManager.centerPopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:VerticalLayout paddingLeft="10" paddingTop="10" paddingBottom="5"/>
+	</s:layout>
+	
+	<s:RichText lineHeight="23">
+		<s:content>
+			<s:p>To support the development of Vmstax, you can make a paypal donation :</s:p>
+		</s:content>
+	</s:RichText>
+	<s:VGroup paddingLeft="50" paddingTop="5" paddingBottom="5">
+		<mx:Spacer height="5"/>
+		<mx:Image source="{Resources.PAYPAL_DONATION}"
+				  horizontalCenter="0" verticalCenter="0"  
+				  buttonMode="true" click="logoPM.makePayment()"/>
+	</s:VGroup>
+	<s:HGroup paddingTop="5" paddingBottom="10" verticalAlign="middle">
+		<s:Label text="Then, contact me by mail at " paddingTop="2" paddingRight="0"/>
+		<mx:LinkButton label="lmichenaud@gmail.com" fontStyle="italic" paddingLeft="0" paddingRight="0"
+					   click="navigateToURL(new URLRequest('mailto:lmichenaud@gmail.com'),'_blank')"/>
+	</s:HGroup>
+	<s:HGroup width="100%" horizontalAlign="center" paddingTop="10">
+		<mx:Button label="Close"  click="PopUpManager.removePopUp(this)"/>		
+	</s:HGroup>
+	
+</s:TitleWindow>

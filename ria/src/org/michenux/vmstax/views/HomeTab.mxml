@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" paddingTop="5" label="Welcome" backgroundColor="#aeb0b2" height="100%">
+	<fx:Declarations>
+		<!-- Placer ici les éléments non visuels (services et objets de valeur, par exemple). -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.michenux.vmstax.models.Resources;
+			import org.michenux.vmstax.pm.LogoPM;
+			
+			[Inject]
+			[Bindable]
+			public var logoPM:LogoPM;	
+			
+			[Bindable]
+			private var chart2010Data:ArrayCollection = new ArrayCollection( [
+				{label:"Linux 2.6",count: 3905},
+				{label:"Solaris",count: 782},
+				{label:"AIX",count: 491},
+				{label:"Linux 2.4",count: 293}
+			]);
+			
+			[Bindable]
+			public var chart2011Data:ArrayCollection = new ArrayCollection([
+				
+				{type:"dstat", 2010:0, 2011:1069},
+				{type:"aix", 2010:491, 2011:960},
+				{type:"solaris", 2010:782, 2011:1209},
+				{type:"linux 2.4", 2010:293, 2011:188},
+				{type:"linux 2.6", 2010:3905, 2011:7200}
+			]);
+			
+			[Bindable]
+			public var chart2012Data:ArrayCollection = new ArrayCollection([
+				
+				{type:"dstat", 2010:0, 2011:1069, 2012:2141},
+				{type:"aix", 2010:491, 2011:960, 2012: 746},
+				{type:"solaris", 2010:782, 2011:1209, 2012: 1798},
+				{type:"linux 2.4", 2010:293, 2011:188, 2012: 124},
+				{type:"linux 2.6", 2010:3905, 2011:7200, 2012: 8946}
+			]);
+						
+			private function displayChart2010(data:Object, field:String,
+														   index:Number, percentValue:Number):String {
+				var temp:String= (" " + percentValue).substr(0,4);
+				return data.label + " (" + temp + "%)" ;
+				
+			}			
+			
+			]]>
+	</fx:Script>
+	
+	<s:VGroup id="col1" width="50%">
+		<s:Panel title="Reward author" width="500">
+			<s:VGroup paddingLeft="10" paddingTop="10" paddingBottom="5">
+				<s:RichText lineHeight="23">
+					<s:content>
+						<s:p>
+							The program was developed during my spare time.
+						</s:p>
+						<s:p>
+							If you like this software and want to reward me, you can do a paypal donation.</s:p>
+					</s:content>
+				</s:RichText>
+				<s:VGroup paddingLeft="50" paddingTop="5" paddingBottom="5">
+					<mx:Spacer height="5"/>
+					<mx:Image source="{Resources.PAYPAL_DONATION}"
+							  horizontalCenter="0" verticalCenter="0"  
+							  buttonMode="true" click="logoPM.makePayment()"/>
+				</s:VGroup>
+				<s:HGroup paddingTop="5" paddingBottom="10" verticalAlign="middle">
+					<s:Label text="Don't hesitate to contact me at" paddingTop="2" paddingRight="0"/>
+					<mx:LinkButton label="lmichenaud@gmail.com" fontStyle="italic" paddingLeft="0" paddingRight="0"
+								   click="navigateToURL(new URLRequest('mailto:lmichenaud@gmail.com'),'_blank')"/>
+				</s:HGroup>						
+				
+			</s:VGroup>
+		</s:Panel>
+		<s:Panel title="What's new in Vmstax 1.6 ?" width="500">
+			<s:VGroup paddingLeft="10" paddingTop="10" paddingBottom="5">
+			<s:RichText lineHeight="23">
+				<s:content>
+					<s:p>Vmstax has been migrated to Google App Engine !</s:p>
+					<s:p>Vmstax is now open source and available on github.</s:p>
+				</s:content>
+			</s:RichText>
+			</s:VGroup>
+		</s:Panel>
+	</s:VGroup>
+	<s:VGroup id="col2" width="50%">	
+		<s:Panel title="Statistics" width="500">
+			<s:layout>
+				<s:VerticalLayout paddingLeft="5" paddingTop="5" horizontalAlign="center" paddingBottom="5"/>
+			</s:layout>
+			<s:Label text="In 2012, 13755 files were uploaded, about 9.3 giga of logs" textAlign="center" width="100%"/>
+			<mx:Legend dataProvider="{myChart}" direction="horizontal"/>
+			<mx:BarChart id="myChart" dataProvider="{chart2012Data}" showDataTips="true">
+			<mx:verticalAxis>
+				<mx:CategoryAxis categoryField="type"/>
+			</mx:verticalAxis>
+			<mx:series>
+				<mx:BarSeries 
+					xField="2012"
+					yField="type"
+					displayName="2012"/>
+				<mx:BarSeries 
+					xField="2011"
+					yField="type"
+					displayName="2011"/>				
+				<mx:BarSeries 
+					xField="2010"
+					yField="type"
+					displayName="2010"/>
+			</mx:series>
+		</mx:BarChart>
+		
+		</s:Panel>
+	</s:VGroup>
+</mx:HBox>

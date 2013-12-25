@@ -1,0 +1,57 @@
+/* CSS file */
+
+@namespace s "library://ns.adobe.com/flex/spark";
+
+s|Application {
+	backgroundColor: #aeb0b2;
+}
+
+.gridLines {
+    direction:"both";
+    horizontalShowOrigin:true;
+    horizontalTickAligned:false;
+    horizontalChangeCount:1;
+    verticalShowOrigin:false;
+    verticalTickAligned:true;
+    verticalChangeCount:1;
+}
+.controlLabels{
+    /* font-family: */
+    font-size: 12;
+    font-weight:bold; 
+}
+
+.fileName {
+	fontWeight: bold ;
+	font-size: 16 ;
+	padding-top: 8px ;
+}
+
+
+.TabNavigator {
+	backgroundColor: black;
+	cornerRadius: 0;
+	tabStyleName: "MyTabs";
+	firstTabStyleName: "MyFirstTab";
+	lastTabStyleName: "MyLastTab";
+	selectedTabTextStyleName: "MySelectedTab";
+}
+
+.MyTabs {
+	backgroundColor: black;
+	cornerRadius: 0;
+	color: black;
+}
+
+.MyFirstTab,
+.MyLastTab {
+	backgroundColor: black;
+	cornerRadius: 0;
+	color: black;
+}
+
+.MySelectedTab {
+	backgroundColor: haloBlue;
+	color: haloBlue;
+	textRollOverColor: haloBlue;
+}

@@ -1,0 +1,17 @@
+
+/.settings
+/ria/.settings
+/ria/target
+/ria/.project
+/ria/.classpath
+/webapp-deprecated/target
+/webapp-deprecated/.settings
+/webapp-deprecated/store
+/webapp-deprecated/.project
+/webapp-deprecated/.classpath
+/war/target
+/war/.settings
+/war/store
+/war/.project
+/war/.classpath
+/.project

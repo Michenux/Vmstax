@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1024"
+		 xmlns:controls="controls.*" 
+		 horizontalAlign="center" 
+		 xmlns:views="org.michenux.vmstax.views.*" 
+		 xmlns:plus="plus.*">
+		 
+	<fx:Declarations>	
+		<views:AddYourLogo id="addYourLogo"/>
+	</fx:Declarations>
+		 
+	<fx:Style>
+		.bar2Style {
+			color: #ffffff;
+			font-size: 14;
+			font-weight: bold;
+			corner-radius: 9;
+			gap: 10;
+		}	
+	</fx:Style>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.google.analytics.components.FlexTracker;
+			import com.google.analytics.debug.Info;
+			
+			import flash.net.navigateToURL;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.events.IndexChangedEvent;
+			
+			import org.michenux.vmstax.events.GetVmstaxFormatEvent;
+			import org.michenux.vmstax.models.Resources;
+			import org.michenux.vmstax.pm.ChartViewPM;
+			import org.michenux.vmstax.pm.LogoPM;
+			import org.swizframework.utils.logging.SwizLogger;
+		
+			private static var logger:SwizLogger ;
+						
+			[Inject]
+			[Bindable]
+			public var chartViewPM:ChartViewPM;
+		
+			[Bindable]
+			private var busyText: String = "Loading..." ; 
+			
+			[Embed("/assets/icons/linux24.png")]
+			public var linux24Icon:Class;
+			
+			[Embed("/assets/icons/linux26.png")]
+			[Bindable] 
+			public var linux26Icon:Class;
+			
+			[Embed("/assets/icons/aix-logo.png")]
+			public var aixIcon:Class;
+			
+			[Embed("/assets/icons/solaris.png")]
+			public var solarisIcon:Class;
+			
+			[Inject (source="tracker")]
+			public var tracker:FlexTracker ;
+			
+			[EventHandler (event="mx.events.FlexEvent.APPLICATION_COMPLETE")]
+			public function init() : void {
+				logger = SwizLogger.getLogger(this);
+				logger.info("VMSTAX - ChartView.init");
+
+				chartViewPM.filenameOptionsMenuButton = this.buttonFilenameOptions ;
+				chartViewPM.comboPeriodicity = this.comboPeriodicity ;
+				chartViewPM.tabStacks = this.tabStacks ;
+				chartViewPM.init();
+				
+				tabBar.setTabClosePolicy(0, false);
+			}
+			
+			[EventHandler (event="applicationLoaded")]
+			public function applicationLoaded() : void {
+				logger.info("VMSTAX - ChartView.applicationLoaded");
+				this.controlBar.enabled = true ;
+				this.buttonUploadFile.dataProvider = chartViewPM.uploadMenuData ;
+				this.buttonUploadFile.label = "Upload Log (" + chartViewPM.uploadMenuData[0].label +")";
+				this.buttonFilenameOptions.label = "Filename (" + chartViewPM.comboFilenameOptions[0].label + ")";
+			}
+		]]>
+	</fx:Script>
+	
+	<mx:Spacer height="1"/>
+	
+	<mx:ApplicationControlBar id="controlBar" dock="true" width="1024" horizontalAlign="center" styleName="controlBar" height="68"  enabled="false">
+		<s:HGroup width="100%" height="100%">
+			<s:VGroup paddingTop="4">
+				<s:Label width="88" fontSize="13" textAlign="left" fontWeight="bold"
+						 text="Vmstax 1.6.0" buttonMode="true" 
+						 click="navigateToURL(new URLRequest('http://www.michenux.net/vmstax-info'),'_blank')"/>
+				<s:Label fontSize="10" textAlign="right"
+						 text="Contact" paddingRight="5"
+						 fontStyle="italic" buttonMode="true" click="navigateToURL(new URLRequest('http://www.michenux.net/contact'),'_blank')"/>
+			</s:VGroup>
+			<s:HGroup width="100%" horizontalAlign="left" height="100%" verticalAlign="bottom">
+				<mx:PopUpMenuButton id="buttonUploadFile" height="38"
+										showRoot="true" labelField="label" iconField="icon"
+										itemClick="chartViewPM.addVmstatTraceFile(event)"
+										icon="{Resources.UPLOAD_ICON}" width="255" textAlign="left"/>
+					
+					<mx:PopUpMenuButton id="buttonFilenameOptions" width="170" height="38"
+										dataProvider="{chartViewPM.comboFilenameOptions}" labelField="label"
+										itemClick="chartViewPM.changeFilenameOptions(event)" visible="{chartViewPM.isGraphs}"
+										icon="{Resources.FILENAME_ICON}"/>
+					
+					<mx:PopUpMenuButton id="buttonSaveAsImage" 
+										showRoot="true" height="38"
+										dataProvider="{chartViewPM.saveAsImageMenuData}" 
+										label="Save as PNG" 
+										itemClick="chartViewPM.saveChartAsImage(event)"
+										visible="{chartViewPM.isGraphs}"
+										icon="{Resources.SAVEASIMAGE_ICON}"/>    
+					
+					<mx:Button id="buttonPrint" 
+						click="chartViewPM.printChart(this.tabStacks.selectedChild)" height="38"
+						visible="{chartViewPM.isGraphs}"
+						icon="{Resources.PRINT_ICON}" label="Print"/>
+					
+					<mx:PopUpMenuButton id="comboPeriodicity" width="96" height="38" textAlign="left"
+								 dataProvider="{chartViewPM.periodicities}" labelField="label" 
+								 itemClick="chartViewPM.changePeriodicity(event)" 
+								 visible="{chartViewPM.isGraphs}"
+								 icon="{Resources.TIME_ICON}"/>
+			</s:HGroup>
+		</s:HGroup>
+	</mx:ApplicationControlBar>
+	
+	<s:Group width="100%">
+		<plus:TabBarPlus id="tabBar" maxWidth="1024" dataProvider="{tabStacks}" 
+			gap="2" cornerRadius="4" closePolicy="always" styleName="bar2Style" tabSkin="plus.skins.MyTabSkin"/>
+		<s:Rect left="0" right="0" top="26" height="4">
+			<s:fill>
+				<s:SolidColor color="#A5BC4E"/>
+			</s:fill>
+		</s:Rect>
+		<s:Rect left="0" right="0" top="30" height="6">
+			<s:fill>
+				<s:LinearGradient rotation="90">
+					<s:GradientEntry color="#c4d0ce"/>
+					<s:GradientEntry color="#AEB0B2"/>
+				</s:LinearGradient>
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+	
+	<mx:ViewStack id="tabStacks" width="1024" resizeToContent="true" change="chartViewPM.changeTab(event)">
+		<views:HomeTab/>
+	</mx:ViewStack>
+		
+</s:VGroup>
