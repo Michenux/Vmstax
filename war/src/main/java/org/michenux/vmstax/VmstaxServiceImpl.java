@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -23,7 +24,8 @@ import org.michenux.vmstax.vmstat.solaris.VmSolarisParser;
  * 
  */
 public class VmstaxServiceImpl {
-
+	private static final Logger log = Logger.getLogger(VmstaxService.class.getName());
+	
 	private static final int BUFFER = 2048;
 
 	/**
@@ -104,8 +106,7 @@ public class VmstaxServiceImpl {
 		} else {
 			throw new Exception("Can't find parser for format : " + p_sFormat);
 		}
-		
-		System.out.println("< parseLogFile");
+
 		return r_listVmstaxData;
 	}
 
@@ -120,7 +121,6 @@ public class VmstaxServiceImpl {
 	private List<VmstaxData> parseZipContent(byte[] p_bContent,
 			String p_sFormat, String p_sZipFileName, VmstaxContext p_oVmstaxContext) throws Exception {
 
-		System.out.println("> parseZipContent");
 		List<VmstaxData> r_listVmstaxData = new ArrayList<VmstaxData>();
 
 		byte data[] = new byte[BUFFER];
@@ -186,7 +186,7 @@ public class VmstaxServiceImpl {
 	public void afterPropertiesSet() {
 		for (VmstaxParser oVmstaxParser : this.parsers) {
 			this.vmstaxParsers.put(oVmstaxParser.getName(), oVmstaxParser);
-			System.out.println("found parser : " + oVmstaxParser.getName());
+			log.info("found parser : " + oVmstaxParser.getName());
 			this.formats.add(new VmstaxFormat(oVmstaxParser.getName(),
 					oVmstaxParser.getDisplayName(), oVmstaxParser.getIcon()));
 		}

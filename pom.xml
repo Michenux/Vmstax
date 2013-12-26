@@ -10,6 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<appengine.app.version>160</appengine.app.version>
 	</properties>
 
 	<modules>
@@ -79,6 +80,18 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<repositories>
+				<repository>
+					<id>maven-repo</id>
+					<name>maven-repo</name>
+					<releases>
+						<enabled>true</enabled>
+						<checksumPolicy>ignore</checksumPolicy>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<url>file://${project.basedir}/maven-repo</url>
+				</repository>
 				<repository>
 					<id>flex-mojos-repository</id>
 					<url>http://repository.sonatype.org/content/groups/flexgroup/</url>

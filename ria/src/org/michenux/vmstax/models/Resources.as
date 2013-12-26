@@ -2,6 +2,9 @@ package org.michenux.vmstax.models
 {
 	public final class Resources
 	{				
+		[Embed (source="/assets/images/github_logo.jpg" )]
+		public static const GITHUB:Class;
+
 		[Embed (source="/assets/images/donation_paypal.gif" )]
 		public static const PAYPAL_DONATION:Class;
 		

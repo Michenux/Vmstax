@@ -27,7 +27,6 @@ public abstract class AbstractVmParser<T> implements VmstaxParser {
 		List<LineMetric> listMetrics = new ArrayList<LineMetric>();
 		int iLineNumber = 1;
 		int iRealLineNumber = 1;
-		System.out.println("number of lines to treat : " + p_listLines.size());
 
 		for (String sLine : p_listLines) {
 			sLine = sLine.trim();
@@ -51,12 +50,8 @@ public abstract class AbstractVmParser<T> implements VmstaxParser {
 			++iRealLineNumber;
 		}
 
-		System.out.println("total metrics[size=" + listMetrics.size() + "]");
-
 		if (listMetrics.size() > 210) {
 			listMetrics = mergePoints(listMetrics);
-			System.out.println("merged metrics[size=" + listMetrics.size()
-					+ "]");
 		}
 
 		oVmstaxData.setMetrics(listMetrics);
@@ -74,8 +69,6 @@ public abstract class AbstractVmParser<T> implements VmstaxParser {
 
 		int iNbPoints = p_listMetrics.size();
 		double incStep = iNbPoints / 210.0D;
-
-		System.out.println("inc step = " + incStep);
 
 		double currentStep = incStep;
 		Iterator<LineMetric> iterMetrics = p_listMetrics.listIterator();

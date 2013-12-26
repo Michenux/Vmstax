@@ -84,7 +84,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>Vmstax</finalName>
+		<finalName>Vmstax${appengine.app.version}</finalName>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>

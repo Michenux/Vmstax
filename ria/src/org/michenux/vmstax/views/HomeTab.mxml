@@ -84,12 +84,18 @@
 		</s:Panel>
 		<s:Panel title="What's new in Vmstax 1.6 ?" width="500">
 			<s:VGroup paddingLeft="10" paddingTop="10" paddingBottom="5">
-			<s:RichText lineHeight="23">
-				<s:content>
-					<s:p>Vmstax has been migrated to Google App Engine !</s:p>
-					<s:p>Vmstax is now open source and available on github.</s:p>
-				</s:content>
-			</s:RichText>
+				<s:RichText lineHeight="23">
+					<s:content>
+						<s:p>Vmstax has been migrated to Google App Engine !</s:p>
+						<s:p>Vmstax is now open source and available on github :</s:p>
+					</s:content>
+				</s:RichText>
+				<s:VGroup paddingLeft="50" paddingTop="5" paddingBottom="5">
+					<mx:Spacer height="5"/>
+					<mx:Image source="{Resources.GITHUB}"
+				  	horizontalCenter="0" verticalCenter="0"  
+				  	buttonMode="true" click="navigateToURL(new URLRequest('https://github.com/Michenux/Vmstax'),'_blank')"/>
+				</s:VGroup>
 			</s:VGroup>
 		</s:Panel>
 	</s:VGroup>

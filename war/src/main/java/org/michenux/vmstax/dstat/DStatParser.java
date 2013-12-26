@@ -105,11 +105,6 @@ public class DStatParser implements VmstaxParser {
 		String sCommand = nextLine[1];
 		String sDate = nextLine[6];
 
-		System.out.println("host: " + sHost);
-		System.out.println("user: " + sUser);
-		System.out.println("command: " + sCommand);
-		System.out.println("date: " + sDate);
-
 		p_iterLines.next();
 
 		nextLine = csvParser.parseLine(p_iterLines.next());
@@ -122,13 +117,9 @@ public class DStatParser implements VmstaxParser {
 		while (iInputCol < nextLine.length) {
 			String sColName = nextLine[iInputCol];
 			if (!sColName.isEmpty()) {
-				System.out.println("col name : " + sColName);
 				DStatColParser oDStatColParser = findParser(sColName);
 				if (oDStatColParser != null) {
 					oDStatColParser.setColIndexes(iInputCol, iOutputFieldIndex);
-					System.out.println("adding column parser : "
-							+ oDStatColParser.getClass().getName() + " at col "
-							+ iInputCol);
 					listParsers.add(oDStatColParser);
 					iInputCol += oDStatColParser.getInputNbCols() - 1;
 					iOutputFieldIndex += oDStatColParser.getOutputNbCols();
@@ -192,7 +183,6 @@ public class DStatParser implements VmstaxParser {
 						for (DStatColParser oDStatParser : listParsers) {
 							oDStatParser.parse(nextLine, oDStatLineMetric);
 						}
-						// System.out.println(oDStatLineMetric.toString());
 						listMetrics.add(oDStatLineMetric);
 					} catch (Exception e) {
 						StringBuffer sb = new StringBuffer();
@@ -218,8 +208,6 @@ public class DStatParser implements VmstaxParser {
 		// merge
 		if (listMetrics.size() > 210) {
 			listMetrics = mergePoints(listMetrics);
-			System.out.println("merged metrics[size=" + listMetrics.size()
-					+ "]");
 		}
 		r_oVmstaxData.setMetrics(listMetrics);
 
@@ -264,8 +252,6 @@ public class DStatParser implements VmstaxParser {
 
 		int iNbPoints = p_listMetrics.size();
 		double incStep = iNbPoints / 210.0D;
-
-		System.out.println("inc step = " + incStep);
 
 		double currentStep = incStep;
 		Iterator<DStatLineMetric> iterMetrics = p_listMetrics.listIterator();

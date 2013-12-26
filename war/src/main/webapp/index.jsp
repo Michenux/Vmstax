@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0014)about:internet -->
+<%@page import="com.google.appengine.api.utils.SystemProperty"%>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">	
     <!-- 
     Smart developers always View Source. 
@@ -10,6 +11,20 @@
     
     Learn more about Flex at http://flex.org 
     // -->
+    <%
+    		
+		String version = SystemProperty.version.get();
+		String applicationVersion = SystemProperty.applicationVersion.get();
+		applicationVersion = applicationVersion.substring(0, applicationVersion.indexOf('.'));
+		
+		String path = request.getContextPath();
+		String getProtocol=request.getScheme();
+		String getDomain=request.getServerName();
+		String getPort=Integer.toString(request.getServerPort());
+		String baseUrl = getProtocol+"://"+getDomain+":"+getPort+path+"/";
+    %>
+    
+    
     <head>
         <title>Vmstax - build your charts from vmstat log files</title>         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -43,7 +58,7 @@
             <!-- To use express install, set to playerProductInstall.swf, otherwise the empty string. -->
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {};
-            flashvars.channelUrl="http://localhost:8888/messagebroker/amf";
+            flashvars.channelUrl="<%= baseUrl %>messagebroker/amf";
             var params = {};
             params.quality = "high";
             params.bgcolor = "#aeb0b2";
@@ -54,7 +69,7 @@
             attributes.name = "Vmstax";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "Vmstax.swf", "flashContent", 
+                "Vmstax<%=applicationVersion%>.swf", "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
@@ -81,18 +96,18 @@
 	   	
        	<noscript>
             <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="Vmstax">
-                <param name="movie" value="Vmstax.swf" />
+                <param name="movie" value="Vmstax<%=applicationVersion%>.swf" />
                 <param name="quality" value="high" />
                 <param name="bgcolor" value="#aeb0b2" />
                 <param name="allowScriptAccess" value="sameDomain" />
                 <param name="allowFullScreen" value="true" />
                 <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="Vmstax.swf" width="100%" height="100%">
+                <object type="application/x-shockwave-flash" data="Vmstax<%=applicationVersion%>.swf" width="100%" height="100%">
                     <param name="quality" value="high" />
                     <param name="bgcolor" value="#aeb0b2" />
                     <param name="allowScriptAccess" value="sameDomain" />
                     <param name="allowFullScreen" value="true" />
-                    <param name="flashvars" value="channelUrl=http://localhost:8888/messagebroker/amf" />
+                    <param name="flashvars" value="channelUrl=<%=baseUrl %>messagebroker/amf" />
                 <!--<![endif]-->
                 <!--[if gte IE 6]>-->
                 	<p> 

@@ -3,6 +3,8 @@ package org.michenux.vmstax;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 public class VmstaxContext {
 
 	private List<String> messages = new ArrayList<String>();
@@ -22,6 +24,7 @@ public class VmstaxContext {
 		for( String sMessage : messages ) {
 			sMessages.append(sMessage);
 		}
+		
 		return sMessages.toString();
 	}
 }
