@@ -45,6 +45,16 @@
 				{type:"linux 2.4", 2010:293, 2011:188, 2012: 124},
 				{type:"linux 2.6", 2010:3905, 2011:7200, 2012: 8946}
 			]);
+			
+			[Bindable]
+			public var chart2013Data:ArrayCollection = new ArrayCollection([
+				
+				{type:"dstat", 2010:0, 2011:1069, 2012:2141, 2013: 2406},
+				{type:"aix", 2010:491, 2011:960, 2012: 746, 2013: 408},
+				{type:"solaris", 2010:782, 2011:1209, 2012: 1798, 2013: 1503},
+				{type:"linux 2.4", 2010:293, 2011:188, 2012: 124, 2013: 160},
+				{type:"linux 2.6", 2010:3905, 2011:7200, 2012: 8946, 2013: 11224}
+			]);
 						
 			private function displayChart2010(data:Object, field:String,
 														   index:Number, percentValue:Number):String {
@@ -104,13 +114,17 @@
 			<s:layout>
 				<s:VerticalLayout paddingLeft="5" paddingTop="5" horizontalAlign="center" paddingBottom="5"/>
 			</s:layout>
-			<s:Label text="In 2012, 13755 files were uploaded, about 9.3 giga of logs" textAlign="center" width="100%"/>
+			<s:Label text="In 2013, 15701 files uploaded." textAlign="center" width="100%"/>
 			<mx:Legend dataProvider="{myChart}" direction="horizontal"/>
-			<mx:BarChart id="myChart" dataProvider="{chart2012Data}" showDataTips="true">
+			<mx:BarChart id="myChart" dataProvider="{chart2013Data}" showDataTips="true">
 			<mx:verticalAxis>
 				<mx:CategoryAxis categoryField="type"/>
 			</mx:verticalAxis>
 			<mx:series>
+				<mx:BarSeries 
+					xField="2013"
+					yField="type"
+					displayName="2013"/>
 				<mx:BarSeries 
 					xField="2012"
 					yField="type"
